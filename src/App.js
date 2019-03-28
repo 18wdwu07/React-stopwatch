@@ -12,6 +12,7 @@ class App extends Component {
             buttonClass: 'btn btn-primary'
         }
         this.toggleTimer = this.toggleTimer.bind(this);
+        this.resetWatch = this.resetWatch.bind(this);
     }
 
     toggleTimer(){
@@ -44,13 +45,20 @@ class App extends Component {
         })
     }
 
+    resetWatch(){
+        this.setState({
+            timerText: 0,
+            buttonText: 'Start Stop Watch',
+            buttonClass: 'btn btn-primary'
+        })
+    }
 
 
   render() {
       let { buttonText, buttonClass } = this.state;
       let button;
       if( (this.state.timerOn === false) && (this.state.timerText > 0) ){
-          button = <button className="btn btn-danger">Reset Stop Watch</button>;
+          button = <button className="btn btn-danger" onClick={this.resetWatch}>Reset Stop Watch</button>;
       }
 
     return (
