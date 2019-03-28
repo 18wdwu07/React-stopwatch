@@ -7,9 +7,13 @@ class App extends Component {
         super();
         this.state = {
             timerOn: false,
-            timerText: 0,
+            timerDuration: 0,
             buttonText: 'Start Stop Watch',
-            buttonClass: 'btn btn-primary'
+            buttonClass: 'btn btn-primary',
+            time: {
+                seconds: '00',
+                minutes: '0'
+            }
         }
         this.toggleTimer = this.toggleTimer.bind(this);
         this.resetWatch = this.resetWatch.bind(this);
@@ -17,7 +21,6 @@ class App extends Component {
 
     toggleTimer(){
         if(this.state.timerOn === false){
-
             timerInt = setInterval(
                 () => this.tick(),1000
             );
@@ -39,17 +42,40 @@ class App extends Component {
     }
 
     tick(){
-        var newTime = this.state.timerText + 1;
+        var currentSeconds = parseFloat(this.state.time['seconds']);
+        var newSeconds = (parseInt(currentSeconds, 10) + 101).toString().substr(1);
+        if(newSeconds === '60'){
+            var currentMin = parseFloat(this.state.time['minutes']);
+            this.setState(prevState => ({
+                time: {
+                    seconds: '00',
+                    minutes: currentMin + 1
+                }
+            }))
+        } else {
+            this.setState(prevState => ({
+                time: {
+                    ...prevState.time,
+                    seconds: newSeconds
+                }
+            }))
+        }
         this.setState({
-            timerText: newTime
+            timerDuration: this.state.timerDuration + 1
         })
+
+
     }
 
     resetWatch(){
         this.setState({
-            timerText: 0,
+            timerDuration: 0,
             buttonText: 'Start Stop Watch',
-            buttonClass: 'btn btn-primary'
+            buttonClass: 'btn btn-primary',
+            time: {
+                seconds: '00',
+                minutes: '0'
+            }
         })
     }
 
@@ -57,7 +83,7 @@ class App extends Component {
   render() {
       let { buttonText, buttonClass } = this.state;
       let button;
-      if( (this.state.timerOn === false) && (this.state.timerText > 0) ){
+      if( (this.state.timerOn === false) && (this.state.timerDuration > 0) ){
           button = <button className="btn btn-danger" onClick={this.resetWatch}>Reset Stop Watch</button>;
       }
 
@@ -68,7 +94,7 @@ class App extends Component {
                 <div className="col-8">
                     <div className="card text-center">
                         <h1 className="display-4">Stop Watch</h1>
-                        <h2 className="display-2">{this.state.timerText}</h2>
+                        <h2 className="display-2">{this.state.time['minutes']}:{this.state.time['seconds']}</h2>
                         <button className={buttonClass} onClick={this.toggleTimer} >{buttonText}</button>
                         {button}
                     </div>
